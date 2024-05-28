@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form class="form form-register" action="/register" method="post">
+        <p>Register to <span>List-It Together!</span></p>
+        <div>
+            <label>Username
+                <input required minlength="5" maxlength="20" autocomplete="off" autofocus name="username" type="text">
+            </label>
+        </div>
+        <div>
+            <label>Password
+                <input required minlength="8" name="password" type="password">
+            </label>
+        </div>
+        <div>
+            <label>Confirm password
+                <input required minlength="8" name="confirmation" type="password">
+            </label>
+        </div>
+        <button type="submit">Register</button>
+        <div class="disclaimer">Already have an account? <a href="/login">Login!</a></div>
+    </form>
+{% endblock %}

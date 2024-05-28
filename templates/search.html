@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block nav %}
+    <form action="/search" method="post" class="search no-select">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+        </svg>
+        <input placeholder="Search for a new product..." type="text" name="search">
+    </form>
+    <svg onclick="activateSearch()" id="mobile-search-icon" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22">
+        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+    </svg>
+{% endblock %}
+
+{% block main %}
+    {% if names %}
+        <div><img id="image-popup" onclick="zoom_image('image-popup', '')"></div>
+        <table class="search-results translate">
+            <tbody>
+                {% for i in range(0, names|length) %}
+                    <tr>
+                        <td class="images">
+                            <div class="image-container">
+                                {% if "image.svg" in images[i] %}
+                                    <svg class="img-icon" xmlns="http://www.w3.org/2000/svg" height="128" viewBox="0 -960 960 960" width="128">
+                                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
+                                    </svg>
+                                {% else %}
+                                    <img onclick="zoom_image('image-popup', '{{ images[i] }}')" src="{{ images[i] }}" alt="product_image">
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="names">
+                            <div class="info">
+                                <span class="name">{{ names[i] }}</span><br>
+                                <span class="brand-name">{{ brands[i] }}</span>
+                            </div>
+                            <div class="search-button-set min-set">
+                                <button name="add" class="invisible-button" onclick='addFromResults("{{ names[i] }}", "{{ brands[i] }}", "{{ images[i] }}", "", this)'>
+                                    <svg class="icons" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28">
+                                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                                    </svg>
+                                </button>
+                                <button class="invisible-button" type="button" onclick='editFavorite("{{ names[i] }}", "{{ brands[i] }}", "{{ images[i] }}", "", this)'>
+                                    <svg class="icons" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.2691 4.41115C11.5006 3.89177 11.6164 3.63208 11.7776 3.55211C11.9176 3.48263 12.082 3.48263 12.222 3.55211C12.3832 3.63208 12.499 3.89177 12.7305 4.41115L14.5745 8.54808C14.643 8.70162 14.6772 8.77839 14.7302 8.83718C14.777 8.8892 14.8343 8.93081 14.8982 8.95929C14.9705 8.99149 15.0541 9.00031 15.2213 9.01795L19.7256 9.49336C20.2911 9.55304 20.5738 9.58288 20.6997 9.71147C20.809 9.82316 20.8598 9.97956 20.837 10.1342C20.8108 10.3122 20.5996 10.5025 20.1772 10.8832L16.8125 13.9154C16.6877 14.0279 16.6252 14.0842 16.5857 14.1527C16.5507 14.2134 16.5288 14.2807 16.5215 14.3503C16.5132 14.429 16.5306 14.5112 16.5655 14.6757L17.5053 19.1064C17.6233 19.6627 17.6823 19.9408 17.5989 20.1002C17.5264 20.2388 17.3934 20.3354 17.2393 20.3615C17.0619 20.3915 16.8156 20.2495 16.323 19.9654L12.3995 17.7024C12.2539 17.6184 12.1811 17.5765 12.1037 17.56C12.0352 17.5455 11.9644 17.5455 11.8959 17.56C11.8185 17.5765 11.7457 17.6184 11.6001 17.7024L7.67662 19.9654C7.18404 20.2495 6.93775 20.3915 6.76034 20.3615C6.60623 20.3354 6.47319 20.2388 6.40075 20.1002C6.31736 19.9408 6.37635 19.6627 6.49434 19.1064L7.4341 14.6757C7.46898 14.5112 7.48642 14.429 7.47814 14.3503C7.47081 14.2807 7.44894 14.2134 7.41394 14.1527C7.37439 14.0842 7.31195 14.0279 7.18708 13.9154L3.82246 10.8832C3.40005 10.5025 3.18884 10.3122 3.16258 10.1342C3.13978 9.97956 3.19059 9.82316 3.29993 9.71147C3.42581 9.58288 3.70856 9.55304 4.27406 9.49336L8.77835 9.01795C8.94553 9.00031 9.02911 8.99149 9.10139 8.95929C9.16534 8.93081 9.2226 8.8892 9.26946 8.83718C9.32241 8.77839 9.35663 8.70162 9.42508 8.54808L11.2691 4.41115Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-results">No results for "<span>{{ word }}</span>"</p>
+        <div class="no-results-create">
+            <div id="no-result-container">
+                <span id="span-create">Create a new product</span>
+                <span id="no-name" class="name">{{ word }}</span>
+            </div>
+            <div class="search-button-set search-button-set2">
+                <button class="add search-add" type="button" onclick='addFromResults("{{ word }}", "", " ", "", this)'>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                    </svg>
+                </button>
+            </div>
+        </td>
+        </div>
+    {% endif %}
+{% endblock %}

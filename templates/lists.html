@@ -1,0 +1,167 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Lists
+{% endblock %}
+
+{% block main %}
+    <div class="popup" id="delete-popup">
+        <p id="delete-p">Delete confirmation</p>
+        <span id="delete-span">Are you sure you want to delete this list?</span>
+        <form method="post" action="/lists">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="delete" id="list-delete" value="">
+            <div class="create-submit">
+                <input class="cancel" type="button" value="Cancel" onclick="activate_delete('delete-popup', '', '', '', '')">
+                <input class="submit" type="submit" value="Delete">
+            </div>
+        </form>
+    </div>
+    <div class="popup" id="edit-popup">
+        <p id="edit-p">Edit</p>
+        <form method="post" action="/lists">
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="list" id="list" value="">
+            <div class="create-inputs">
+                <div class="list-name">
+                    <label>New name</label>
+                    <input id="new-name" required maxlength="35" name="new-name" type="text" placeholder="">
+                </div>
+                <div class="number">
+                    <label>Users</label>
+                    <input id="users-edit" placeholder="" name="new-number" required type="number" value="1" min="1" max="100" min="1" step="1" />
+                </div>
+            </div>
+            <label id="generate-new">Generate a new code
+                <input type="checkbox" name="generate" class="form-check-input" type="checkbox" value="true" id="flexCheckChecked">
+            </label>
+            <div class="create-submit">
+                <input class="cancel" type="button" value="Cancel" onclick="activate_edit('edit-popup', '', '', '')">
+                <input class="submit" type="submit" value="Edit">
+            </div>
+        </form>
+    </div>
+    <div class="popup" id="quit-popup">
+        <p id="quit-p">Quit</p>
+        <span></span>
+        <form method="post" action="/lists">
+            <input type="hidden" name="action" value="quit">
+            <input type="hidden" name="list-quit" id="list-quit" value="">
+            <span id="quit-span">Are you sure you want to quit the list?</span>
+            <div class="create-submit">
+                <input class="cancel" type="button" value="Cancel" onclick="activate_delete('quit-popup', '', '', '', '')">
+                <input class="submit" name="quit" type="submit" value="Quit">
+            </div>
+        </form>
+    </div>
+    <div class="popup" id="create-popup">
+        <p>Create a new list</p>
+        <form method="post" action="/lists">
+            <input type="hidden" name="action" value="create">
+            <div class="create-inputs">
+                <div class="list-name">
+                    <label>Name</label>
+                    <input class="create-value" required maxlength="35" name="name" type="text" placeholder="">
+                </div>
+                <div class="number">
+                    <label>Users</label>
+                    <input placeholder="" name="number" required class="create-value" type="number" min="1" max="100" min="1" step="1" />
+                </div>
+            </div>
+            <span class="access-code">Access code: <b>{{ code }}</b></span>
+            <div class="create-submit">
+                <input class="cancel" type="button" value="Cancel" onclick="activate_popup('create-popup')">
+                <input class="submit" type="submit" value="Create">
+            </div>
+        </form>
+    </div>
+    <div class="popup" id="join-popup">
+        <p>Join a list</p>
+        <form method="post" action="/lists">
+            <input type="hidden" name="action" value="join">
+            <div class="create-inputs">
+                <div class="code-input">
+                    <label>Code</label>
+                    <input required minlength="7" maxlength="7" name="code" type="text" placeholder="">
+                </div>
+            </div>
+            <div class="create-submit">
+                <input class="cancel" type="button" value="Cancel" onclick="activate_popup('join-popup')">
+                <input class="submit" type="submit" value="Join">
+            </div>
+        </form>
+    </div>
+    <div class="list-options no-select">
+        <button value="1" id="create-list" name="create" onclick="activate_popup('create-popup')">Create</button>
+        <button value="2" id="join-list" onclick="activate_popup('join-popup')" name="join">Join</button>
+    </div>
+    {% if lists | length > 0 %}
+        <div class="list-bar no-select">
+            <div class="name-column">
+                Name
+            </div>
+            <div class="users-column">
+                <img src="/static/users.svg"> Users
+            </div>
+            <div class="items-column">
+                <img class="cart" src="/static/cart.svg"> Items
+            </div>
+        </div>
+    {% else %}
+        <div class="list-bar">
+            <div class="no-list-bar">You are participating in 0 lists...</div>
+        </div>
+    {% endif %}
+    <div id="table-container" class="scrollbar scrollbar-primary">
+        <table class="lists">
+            <tbody>
+                {% for i in range(lists|length) %}
+                    <tr>
+                        <td class="table-list-name translate">
+                            <span class="list">{{ lists[i].name }}</span>
+                            <span class="code">#{{ lists[i].code }}</span>
+                        </td>
+                        <td>
+                            <span class="capacity">{{ users[i] }}/{{ lists[i].capacity }}</span>
+                        </td>
+                        <td>
+                            <span class="items-number"> {{ items[i] }} </span>
+                        </td>
+                        <td>
+                            {% if user_id == lists[i].founder_id %}
+                            {% endif %}
+                            <form class="no-select" method="post" action="/lists">
+                                <input type="hidden" name="action" value="delete">
+                                <div class="search-button-set search-button-set2 x">
+                                    {% if user_id == lists[i].founder_id %}
+                                        <button class="invisible_button" type="button" name="delete" onclick='activate_delete("delete-popup", "{{ lists[i].code }}", "{{ lists[i].name }}", "", "")'>
+                                            <img src="/static/delete.svg">
+                                        </button>
+                                    {% endif %}
+                                    {% if user_id != lists[i].founder_id %}
+                                        <button class="invisible_button" type="button" name="delete" onclick='activate_delete("quit-popup", "{{ lists[i].code }}", "{{ lists[i].name }}", "", "")'>
+                                            <img src="/static/delete.svg">
+                                        </button>
+                                    {% endif %}
+                                    {% if user_id == lists[i].founder_id %}
+                                        <button class="invisible_button" type="button" onclick='activate_edit("edit-popup", "{{ lists[i].code }}", "{{ lists[i].name }}", "{{ users[i] }}")'>
+                                            <img src="/static/gear.svg">
+                                        </button>
+                                    {% endif %}
+                                    {% if user_id != lists[i].founder_id %}
+                                        <button class="unavailable invisible_button" type="button">
+                                            <img src="/static/gear.svg">
+                                        </button>
+                                    {% endif %}
+                                </form>
+                                <button class="invisible_button no-select" type="submit" value="{{ lists[i].code }}" name="enter" id="enter">
+                                    <img src="/static/join.svg">
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

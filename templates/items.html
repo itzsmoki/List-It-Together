@@ -1,0 +1,209 @@
+<div class="list-container categories-container">
+    <div id="items-category" class="container-full-list">
+        <div class="list-container">
+            <div class="list-main">
+                {% if not items %}
+                    <span class="no-items no-select">Empty</span>
+                {% endif %}
+                {% for i in range(items|length) %}
+                    <div class="list-item" id="list-item{{ i }}">
+                        {% if "/static/image.svg" in items[i].image %}
+                            <div class="image-container2 no-select">
+                                <img class="img-icon" src="{{ items[i].image }}">
+                            </div>
+                        {% else %}
+                            <div class="image-container2 no-select">
+                                <img onclick="zoom_image('image-popup', '{{ items[i].image }}')" src="{{ items[i].image }}" onerror="this.onerror=null; this.onclick=null; this.className='img-icon'; this.src='/static/image.svg'">
+                            </div>
+                        {% endif %}
+                        <div class="info list-item-info">
+                            <span id="list-item-name{{ i }}" class="list-item-name translate-names">
+                                {{ items[i].name }}
+                            </span>
+                            {% if items[i].brand == "§none§" %}
+                            {% else %}
+                                <span id="list-item-brand{{ i }}" class="list-item-brand translate-names">
+                                    {{ items[i].brand }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if items[i].priority == 0 %}
+                            <div class="priority-text">
+                                <img class="no-select" src="/static/low.svg">
+                                <span>Low</span>
+                            </div>
+                        {% elif items[i].priority == 1 %}
+                            <div class="priority-text">
+                                <img class="no-select" src="/static/normal.svg">
+                                <span>Normal</span>
+                            </div>
+                        {% elif items[i].priority == 2 %}
+                            <div class="priority-text">
+                                <img class="no-select" src="/static/high.svg">
+                                <span>High</span>
+                            </div>
+                        {% endif %}
+                        {% if days[i] == 0 %}
+                            <div class="adding-date">
+                                Today
+                            </div>
+                        {% elif days[i] == 1%}
+                            <div class="adding-date">
+                                Yesterday
+                            </div>
+                        {% else %}
+                            <div class="adding-date">
+                                {{ days[i] }} days ago
+                            </div>
+                        {% endif %}
+                        <div class="search-button-set button-set-item">
+                            <button class="edit list-edit-icon" type="button" onclick="activate_product_edit('edit-popup', '{{ items[i].name }}', '{{ items[i].brand }}', '{{ items[i].image }}', '{{ items[i].priority }}', '{{ items[i].id }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M167-120q-21 5-36.5-10.5T120-167l40-191 198 198-191 40Zm191-40L160-358l458-458q23-23 57-23t57 23l84 84q23 23 23 57t-23 57L358-160Zm317-600L261-346l85 85 414-414-85-85Z" />
+                                </svg>
+                            </button>
+                            <button onclick="complete('list-item{{ i }}', '{{ items[i].id }}', this)" class="add add-edit-icon" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div onclick="display_edit_buttons()" class="circle-edit-button"><svg id="edic" xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 -960 960 960" width="26">
+                <path d="M167-120q-21 5-36.5-10.5T120-167l40-191 198 198-191 40Zm191-40L160-358l458-458q23-23 57-23t57 23l84 84q23 23 23 57t-23 57L358-160Zm317-600L261-346l85 85 414-414-85-85Z" />
+            </svg><svg id="x" xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg></div>
+            <div onclick="activate_popup('create-popup')" class="circle-add-button"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30">
+                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+            </svg></div>
+        </div>
+    </div>
+    <div id="history-category" class="container-full-list">
+        <div class="list-container">
+            <div class="list-main">
+                {% if not history %}
+                    <span class="no-items no-select">Empty</span>
+                {% endif %}
+                {% for i in range(history|length) %}
+                    <div class="list-item" id="history-item{{ i }}">
+                        {% if "/static/image.svg" in history[i].image %}
+                            <div class="image-container2">
+                                <img class="img-icon" src="{{ history[i].image }}">
+                            </div>
+                        {% else %}
+                            <div class="image-container2">
+                                <img onclick="zoom_image('image-popup', '{{ history[i].image }}')" src="{{ history[i].image }}" onerror="this.onerror=null; this.onclick=null; this.className='img-icon'; this.src='/static/image.svg'">
+                            </div>
+                        {% endif %}
+                        <div class="info list-item-info">
+                            <span id="history-item-name{{ i }}" class="list-item-name translate-names">
+                                {{ history[i].name }}
+                            </span>
+                            {% if history[i].brand == "§none§" %}
+                            {% else %}
+                                <span id="history-item-brand{{ i }}" class="list-item-brand translate-names">
+                                    {{ history[i].brand }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    <!-- <svg class="completed-by-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                            <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+                        </svg>
+                        <div class="completed-by">
+                            <span>{{ history[i]['user_id'][0].username }}</span>
+                        </div> -->
+                        {% if history_days[i] == 0 %}
+                            <div class="adding-date-history">
+                                Today
+                            </div>
+                        {% elif history_days[i] == 1%}
+                            <div class="adding-date-history">
+                                Yesterday
+                            </div>
+                        {% else %}
+                            <div class="adding-date-history">
+                                {{ history_days[i] }} days ago
+                            </div>
+                        {% endif %}
+                        <div class="search-button-set button-set-item">
+                            <button class="icons" type="button" onclick="activate_delete('delete-popup', '', '', '{{ history[i].id }}', 'history')">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                            </button>
+                            <button class="add-history" onclick="addFromResults('{{ history[i].name }}', '{{ history[i].brand }}', '{{ history[i].image }}', 'history-item{{ i }}', this)" class="add" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div id="favorites-category" class="container-full-list">
+        <div class="list-container">
+            <div class="list-main">
+                {% if not favorites %}
+                    <span class="no-items no-select">Empty</span>
+                {% endif %}
+                {% for i in range(favorites|length) %}
+                    <div class="list-item" id="favorite-item{{ i }}">
+                        {% if "/static/image.svg" in favorites[i].image %}
+                            <div class="image-container2 no-select">
+                                <img class="img-icon" src="{{ favorites[i].image }}">
+                            </div>
+                        {% else %}
+                            <div class="image-container2 no-select">
+                                <img onclick="zoom_image('image-popup', '{{ favorites[i].image }}')" src="{{ favorites[i].image }}" onerror="this.onerror=null; this.onclick=null; this.className='img-icon'; this.src='/static/image.svg'">
+                            </div>
+                        {% endif %}
+                        <div class="info list-item-info">
+                            <span id="favorite-item-name{{ i }}" class="list-item-name translate-names">
+                                {{ favorites[i].name }}
+                            </span>
+                            {% if favorites[i].brand == "§none§" %}
+                            {% else %}
+                                <span id="favorite-item-brand" class="list-item-brand translate-names">
+                                    {{ favorites[i].brand }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="search-button-set button-set-item favorite-set">
+                            <button class="icons" type="button" onclick="activate_delete('delete-popup', '', '', '{{ favorites[i].id }}', 'favorite')">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                            </button>
+                            <button class="icons" type="button" onclick="activate_favorite('favorite-edit-popup', '{{ favorites[i].name }}', '{{ favorites[i].brand }}', '{{ favorites[i].image }}', '{{ favorites[i].id }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M167-120q-21 5-36.5-10.5T120-167l40-191 198 198-191 40Zm191-40L160-358l458-458q23-23 57-23t57 23l84 84q23 23 23 57t-23 57L358-160Zm317-600L261-346l85 85 414-414-85-85Z" />
+                                </svg>
+                            </button>
+                            <button class="icons" id="add-icon" type="button" onclick="addFromResults('{{ favorites[i].name }}', '{{ favorites[i].brand }}', '{{ favorites[i].image }}', 'fakeimage', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                <img onload="activate_category(); translateName()" id="fakeimage" src="/static/image.svg">
+            <div onclick="activate_popup('create-favorite-popup')" class="circle-add-button"><svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30">
+                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+            </svg></div>
+        </div>
+    </div>
+</div>
+<form method="post" action="/list" id="counters">
+    <div class="bottom-bar">
+        <div id="cat1" class="bottom-bar-item no-select">ITEMS <span id="items-counter" class="counter-class"> ({{ items_count[0]['items'] }})</span></div>
+        <div id="cat2" class="bottom-bar-item no-select">HISTORY <span id="history-counter" class="counter-class"> ({{ history_count[0]['items'] }})</span></div>
+        <div id="cat3" class="bottom-bar-item no-select">FAVORITES <span id="favorites-counter" class="counter-class"> ({{ favorites_count[0]['items'] }})</span></div>
+    </div>
+</form>
